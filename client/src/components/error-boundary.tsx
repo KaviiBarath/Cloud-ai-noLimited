@@ -44,11 +44,27 @@ function CrashScreen({ error, onRetry }: { error: Error; onRetry: () => void }) 
             {error.message}
           </code>
         )}
-        <div className="mt-5 flex items-center justify-center gap-2">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           <Button variant="outline" size="sm" onClick={onRetry}>{t('errors.tryAgain')}</Button>
           <Link to="/" onClick={onRetry}>
             <Button size="sm">{t('errors.goHome')}</Button>
           </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-muted-foreground hover:text-foreground"
+            onClick={() => {
+              try {
+                localStorage.removeItem('barath_keys')
+                localStorage.removeItem('barath_provider_keys')
+                localStorage.removeItem('barath_models')
+                localStorage.removeItem('barath_conversations')
+              } catch { /* ignore */ }
+              window.location.href = '/'
+            }}
+          >
+            Reset Cache
+          </Button>
         </div>
       </div>
     </div>

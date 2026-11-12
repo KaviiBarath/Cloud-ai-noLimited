@@ -38,7 +38,7 @@ export interface MockModel {
 }
 
 // User requested: delete any pre-connected / stale keys and start 100% clean
-const CLEANUP_KEY = 'barath_clean_keys_v3'
+const CLEANUP_KEY = 'barath_clean_keys_v4'
 if (typeof window !== 'undefined' && !localStorage.getItem(CLEANUP_KEY)) {
   try {
     localStorage.removeItem('barath_keys')
@@ -324,9 +324,24 @@ export function handleClientFallback<T>(path: string, options?: RequestInit): T 
     } as T
   }
 
-  // 7. Rate Limit Usage
+  // 7. Rate Limit Usage & Quota Forecast
   if (cleanPath === '/api/fallback/rate-limit-usage') {
     return {} as T
+  }
+  if (cleanPath === '/api/fallback/quota-forecast') {
+    return {
+      observationWindowMinutes: 60,
+      minimumRequests: 0,
+      generatedAt: new Date().toISOString(),
+      pools: [],
+    } as T
+  }
+  if (cleanPath === '/api/fallback/penalty-inspector') {
+    return {
+      generatedAtMs: Date.now(),
+      lookbackMinutes: 30,
+      rows: [],
+    } as T
   }
 
   // 8. Keys: GET /api/keys -> Returns ApiKey[] (Array)
@@ -705,15 +720,69 @@ export function handleClientFallback<T>(path: string, options?: RequestInit): T 
     return { enabled: true } as T
   }
   if (cleanPath === '/api/settings/fusion') {
-    return { enabled: false, panel: [], judge: null } as T
+    return {
+      config: {
+        mode: 'auto',
+        models: [],
+        judge: null,
+        k: 3,
+        strategy: 'synthesize',
+        expose_panel: false,
+      },
+      maxK: 5,
+    } as T
+  }
+  if (cleanPath === '/api/settings/anthropic-map') {
+    return {
+      map: {
+        default: 'auto',
+        opus: 'auto',
+        sonnet: 'auto',
+        haiku: 'auto',
+      },
+    } as T
+  }
+  if (cleanPath === '/api/settings/gemini-map') {
+    return {
+      map: {
+        default: 'auto',
+        pro: 'auto',
+        flash: 'auto',
+        flashLite: 'auto',
+      },
+    } as T
+  }
+  if (cleanPath === '/api/settings/agent-compatibility') {
+    return {
+      ollamaEmulation: 'off',
+      exposeClaudeDiscoveryAliases: true,
+    } as T
+  }
+  if (cleanPath === '/api/settings/enable-mcp') {
+    return { enabled: false } as T
+  }
+  if (cleanPath === '/api/settings/url-tokens') {
+    return { tokens: [] } as T
+  }
+  if (cleanPath === '/api/settings/provider-moment-attribution') {
+    return { enabled: false } as T
+  }
+  if (cleanPath === '/api/settings/min-reliability-floor') {
+    return { minReliabilityFloor: 0.5 } as T
   }
 
   // 25. Media & Embeddings & Backups
   if (cleanPath === '/api/media') {
     return { models: [] } as T
   }
+  if (cleanPath.startsWith('/api/media/usage')) {
+    return { models: [], totalRequests: 0 } as T
+  }
   if (cleanPath === '/api/embeddings') {
-    return [] as T
+    return { defaultFamily: '', families: [] } as T
+  }
+  if (cleanPath === '/api/embeddings/usage') {
+    return { models: [], totalRequests: 0 } as T
   }
   if (cleanPath === '/api/client-profiles') {
     return [] as T
@@ -721,15 +790,39 @@ export function handleClientFallback<T>(path: string, options?: RequestInit): T 
   if (cleanPath === '/api/decisions/models') {
     return [] as T
   }
-  if (cleanPath === '/api/backups') {
-    return { backups: [], total: 0 } as T
+  if (cleanPath === '/api/backups/tables') {
+    return { tables: ['keys', 'models', 'settings', 'conversations'] } as T
   }
   if (cleanPath === '/api/backups/schedule') {
-    return { enabled: false, schedule: 'daily' } as T
+    return {
+      schedule: {
+        enabled: false,
+        time: '03:00',
+        intervalDays: 1,
+        backupPath: '',
+      },
+    } as T
+  }
+  if (cleanPath.startsWith('/api/backups')) {
+    return { items: [], total: 0 } as T
   }
 
-  // 26. Agents status
-  if (cleanPath === '/api/agents') {
+  // 26. Cache
+  if (cleanPath === '/api/cache/stats') {
+    return {
+      enabled: true,
+      entries: 0,
+      totalHits: 0,
+      estimatedRequestsSaved: 0,
+      savedTokens: 0,
+      lookupHits: 0,
+      lookupMisses: 0,
+      hitRate: 0,
+    } as T
+  }
+
+  // 27. Agents status
+  if (cleanPath.startsWith('/api/agents')) {
     return {
       agents: {
         claude: { installed: true, injected: true },
@@ -741,15 +834,102 @@ export function handleClientFallback<T>(path: string, options?: RequestInit): T 
     } as T
   }
 
-  // 27. Analytics overview
+  // 28. Discovered models
+  if (cleanPath.includes('discover-models') || cleanPath.includes('discovered-models')) {
+    return { models: [] } as T
+  }
+
+  // 29. Analytics (arrays vs objects must match component expectations!)
+  if (cleanPath === '/api/analytics/by-platform') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/by-client') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/timeline') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/by-model') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/by-key') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/errors') {
+    return [] as T
+  }
+  if (cleanPath === '/api/analytics/requests') {
+    return { total: 0, rows: [] } as T
+  }
+  if (cleanPath.startsWith('/api/analytics/requests/')) {
+    const reqId = parseInt(cleanPath.split('/api/analytics/requests/')[1], 10) || 1
+    return {
+      id: reqId,
+      platform: 'google',
+      modelId: 'gemini-2.5-flash',
+      requestedModel: null,
+      requestType: 'chat',
+      status: 'success',
+      inputTokens: 120,
+      outputTokens: 80,
+      latencyMs: 310,
+      error: null,
+      clientIp: '127.0.0.1',
+      clientUserAgent: 'Web/1.0',
+      createdAt: new Date().toISOString(),
+      keyLabel: 'Default',
+      attemptCount: 1,
+      ttfbMs: 140,
+      attempts: [],
+    } as T
+  }
+  if (cleanPath === '/api/analytics/error-distribution') {
+    return { byCategory: [], byPlatform: [], detailed: [] } as T
+  }
+  if (cleanPath === '/api/analytics/search') {
+    return {
+      total: 0,
+      today: 0,
+      successRate: 100,
+      avgLatencyMs: 0,
+      byEngine: [],
+      series: [],
+    } as T
+  }
   if (cleanPath.startsWith('/api/analytics')) {
     return {
       totalRequests: 1420,
-      totalTokens: 110600,
-      p50LatencyMs: 420,
-      p95LatencyMs: 890,
-      ttftMs: 240,
+      successRate: 99.8,
+      totalInputTokens: 74200,
+      totalOutputTokens: 36400,
+      avgLatencyMs: 380,
+      p50LatencyMs: 340,
+      p95LatencyMs: 780,
+      avgTtfbMs: 180,
+      requestTypeCounts: { chat: 1420, embedding: 0 },
+      estimatedCostSavings: 42.5,
+      pinnedRequests: 0,
+      pinHonoredRequests: 0,
+      firstRequestAt: new Date(Date.now() - 30 * 86400000).toISOString(),
+      lifetimeTotalRequests: 1420,
     } as T
+  }
+
+  // 30. Logs
+  if (cleanPath === '/api/logs') {
+    return {
+      entries: [],
+      nextId: 0,
+      counts: { debug: 0, info: 0, warn: 0, error: 0 },
+    } as T
+  }
+  if (cleanPath === '/api/logs/clear') {
+    return { ok: true } as T
+  }
+
+  // 31. Premium
+  if (cleanPath.startsWith('/api/premium')) {
+    return { success: true, url: '#' } as T
   }
 
   // Default fallback for any other /api endpoint so no page fails

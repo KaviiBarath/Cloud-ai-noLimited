@@ -73,22 +73,23 @@ export function QuotaOutlookSection() {
     queryFn: () => apiFetch('/api/fallback/quota-forecast'),
     refetchInterval: 30_000,
   })
-  const warnings = data?.pools.filter(pool => pool.warning).length ?? 0
-  const available = data?.pools.filter(pool => !pool.unavailableReason) ?? []
-  const unavailable = data?.pools.filter(pool => pool.unavailableReason) ?? []
+  const pools = Array.isArray(data?.pools) ? data.pools : []
+  const warnings = pools.filter(pool => pool.warning).length
+  const available = pools.filter(pool => !pool.unavailableReason)
+  const unavailable = pools.filter(pool => pool.unavailableReason)
   const forecasts = available.filter(pool => pool.status !== 'insufficient_data').length
-  const renderPool = (pool: QuotaOutlookPool) => <OutlookPool key={pool.pool} pool={pool} generatedAt={data!.generatedAt}
-    windowMinutes={data!.observationWindowMinutes} minimumRequests={data!.minimumRequests} />
+  const renderPool = (pool: QuotaOutlookPool) => <OutlookPool key={pool.pool} pool={pool} generatedAt={data?.generatedAt ?? ''}
+    windowMinutes={data?.observationWindowMinutes ?? 60} minimumRequests={data?.minimumRequests ?? 0} />
   return (
     <section aria-label={t('keys.outlookTitle')}>
       <h2 className="text-sm font-medium">{t('keys.outlookTitle')}</h2>
       {isPending ? <p className="mt-3 text-sm text-muted-foreground" role="status">{t('common.loading')}</p>
         : isError ? <div className="mt-3 flex flex-wrap items-center gap-3"><p role="alert" className="text-sm text-muted-foreground">{t('keys.outlookError')}</p><Button size="sm" variant="outline" onClick={() => void refetch()}>{t('keys.outlookRetry')}</Button></div>
-        : !data?.pools.length ? <p className="mt-3 text-sm text-muted-foreground">{t('keys.quotaSignalsEmptyDesc')}</p>
+        : !pools.length ? <p className="mt-3 text-sm text-muted-foreground">{t('keys.quotaSignalsEmptyDesc')}</p>
         : <>
           <p className="mb-4 mt-1 text-xs text-muted-foreground">{warnings > 0 ? t('keys.outlookAttention', { count: warnings }) : forecasts ? t('keys.outlookNoWarnings') : t('keys.outlookNoForecasts')}</p>
-          <p className="mb-3 text-xs text-muted-foreground">{t('keys.outlookCoverage', { count:forecasts,total:data.pools.length })}{' '}
-            {t('keys.outlookTraffic', { count:data.pools.reduce((sum,pool)=>sum+pool.recentRequestCount,0),minutes:data.observationWindowMinutes })}</p>
+          <p className="mb-3 text-xs text-muted-foreground">{t('keys.outlookCoverage', { count:forecasts,total:pools.length })}{' '}
+            {t('keys.outlookTraffic', { count:pools.reduce((sum,pool)=>sum+pool.recentRequestCount,0),minutes:data?.observationWindowMinutes ?? 60 })}</p>
           {available.length > 0 && <div className="divide-y overflow-hidden rounded-3xl border bg-card">{available.map(renderPool)}</div>}
           {unavailable.length > 0 && <details className="mt-3 overflow-hidden rounded-3xl border bg-card">
             <summary className="cursor-pointer px-4 py-3 text-sm sm:px-5">{t('keys.outlookUnavailablePools', { count:unavailable.length })}</summary>
