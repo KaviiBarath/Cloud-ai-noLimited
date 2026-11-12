@@ -22,11 +22,11 @@ export function QuotaSignalsSection({ states }: { states: ProviderQuotaState[] }
       <details>
         <summary className="cursor-pointer text-sm font-medium">{t('keys.outlookRaw')}</summary>
         <div className="mt-3">
-        {states.length === 0 ? (
+        {(!Array.isArray(states) || states.length === 0) ? (
           <EmptyState title={t('keys.quotaSignalsEmptyTitle')} description={t('keys.quotaSignalsEmptyDesc')} className="bg-card" />
         ) : (
           <div className="rounded-3xl border divide-y bg-card overflow-hidden">
-            {states.map((state) => (
+            {(Array.isArray(states) ? states : []).map((state) => (
               <div key={`${state.platform}:${state.keyId}:${state.quotaPoolKey}:${state.metric}`} className="px-4 py-3.5 text-sm">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="font-medium">{state.platform}</span>

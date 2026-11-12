@@ -129,7 +129,7 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
     queryKey: ['proxy-url'],
     queryFn: () => apiFetch('/api/settings/proxy'),
   })
-  const bypassPlatforms = proxyData?.bypassPlatforms ?? []
+  const bypassPlatforms = Array.isArray(proxyData?.bypassPlatforms) ? proxyData.bypassPlatforms : []
   const proxyEnabled = proxyData?.enabled ?? true
 
   const deleteKey = useMutation({
@@ -321,7 +321,8 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   }
 
   const healthKeyMap = new Map<number, { status: string; lastCheckedAt: string | null; lastHealthyAt?: string | null; lastHealthError: string | null }>()
-  for (const k of healthData?.keys ?? []) healthKeyMap.set(k.id, k)
+  const safeHealthKeys = Array.isArray(healthData?.keys) ? healthData.keys : []
+  for (const k of safeHealthKeys) healthKeyMap.set(k.id, k)
   const statusOf = (k: ApiKey) => healthKeyMap.get(k.id)?.status ?? k.status
   // "unchecked" is not a problem (#1459): a new key sits there until its
   // first check, and an LLMTR key until its first served request.
@@ -331,7 +332,8 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   // health poll the row's status already rides on. One badge per key: the
   // lowest remaining fraction among that key's pools, since that pool is the
   // one that runs dry first and starts routing around the key.
-  const balanceOf = balanceByKey(healthData?.quotaStates ?? [])
+  const safeQuotaStates = Array.isArray(healthData?.quotaStates) ? healthData.quotaStates : []
+  const balanceOf = balanceByKey(safeQuotaStates)
 
   // #1176: custom endpoints split into one group per operator-set groupLabel;
   // endpoints without one stay in the default "Custom" group, listed first,
@@ -354,9 +356,9 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   // Search providers (#1174) come first, in their own section: their keys
   // serve /v1/search and agent web search, never a chat completion.
   const grouped: ProviderGroup[] = [
-    ...SEARCH_PROVIDERS.map(p => ({ ...p, platform: p.value, search: true, keys: keys.filter(k => k.platform === p.value) })),
-    ...PLATFORMS.map(p => ({ ...p, platform: p.value, keys: keys.filter(k => k.platform === p.value) })),
-    ...[...customGroups.values()].sort((a, b) =>
+    ...(Array.isArray(SEARCH_PROVIDERS) ? SEARCH_PROVIDERS : []).map(p => ({ ...p, platform: p.value, search: true, keys: keys.filter(k => k.platform === p.value) })),
+    ...(Array.isArray(PLATFORMS) ? PLATFORMS : []).map(p => ({ ...p, platform: p.value, keys: keys.filter(k => k.platform === p.value) })),
+    ...Array.from(customGroups.values()).sort((a, b) =>
       a.customGroup === null ? -1 : b.customGroup === null ? 1 : a.label.localeCompare(b.label)),
   ].filter(p => p.keys.length > 0)
 

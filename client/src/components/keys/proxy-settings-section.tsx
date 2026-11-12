@@ -96,12 +96,12 @@ export function ProxySettingsSection() {
   // This also prevents newly added keys from silently inheriting a proxy route.
   const allProxyPlatforms = [...PLATFORMS, CUSTOM_GROUP]
   const configuredProxyPlatforms = allProxyPlatforms.filter(p => keys.some(k => k.platform === p.value))
-  const bypassed = new Set(data?.bypassPlatforms ?? [])
+  const bypassed = new Set(Array.isArray(data?.bypassPlatforms) ? data.bypassPlatforms : [])
   const everyPlatformBypassed = allProxyPlatforms.every(p => bypassed.has(p.value))
   const everyPlatformRouted = allProxyPlatforms.every(p => !bypassed.has(p.value))
 
   const setAllProxyRoutes = (routed: boolean) => {
-    const next = new Set(data?.bypassPlatforms ?? [])
+    const next = new Set(Array.isArray(data?.bypassPlatforms) ? data.bypassPlatforms : [])
     for (const platform of allProxyPlatforms) {
       if (routed) next.delete(platform.value)
       else next.add(platform.value)

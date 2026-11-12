@@ -24,6 +24,7 @@ export interface KeyBalance {
 
 export function balanceByKey(states: ProviderQuotaState[], now: number = Date.now()): Map<number, KeyBalance> {
   const out = new Map<number, KeyBalance>()
+  if (!Array.isArray(states)) return out
   for (const s of states) {
     if (s.remaining == null) continue
     if (s.resetStrategy === 'token_bucket') continue

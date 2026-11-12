@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button'
 import { SegmentedControl } from '@/components/ui/segmented-control'
 import { PageHeader } from '@/components/page-header'
 import type { ApiKey, Platform } from '../../../shared/types'
-import { Plus, Download } from 'lucide-react'
+import { Plus, Download, Trash2 } from 'lucide-react'
 import { useI18n } from '@/i18n'
+import { toast } from '@/lib/toast'
 import { LISTED_PLATFORMS, type HealthData } from '@/components/keys/shared'
 import { QuotaSignalsSection } from '@/components/keys/quota-signals-section'
 import { UnifiedKeySection } from '@/components/keys/unified-key-section'
@@ -92,6 +93,26 @@ export default function KeysPage() {
               <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
                 <Download className="size-3.5" />
                 {t('keys.export')}
+              </Button>
+            )}
+            {safeKeys.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-destructive hover:bg-destructive/10"
+                onClick={() => {
+                  localStorage.removeItem('barath_keys')
+                  localStorage.removeItem('barath_provider_keys')
+                  localStorage.removeItem('barath_models')
+                  queryClient.invalidateQueries({ queryKey: ['keys'] })
+                  queryClient.invalidateQueries({ queryKey: ['health'] })
+                  queryClient.invalidateQueries({ queryKey: ['fallback'] })
+                  queryClient.invalidateQueries({ queryKey: ['keys-providers'] })
+                  toast.success('All API keys deleted successfully.')
+                }}
+              >
+                <Trash2 className="size-3.5" />
+                Delete all keys
               </Button>
             )}
             {tab === 'providers' && (

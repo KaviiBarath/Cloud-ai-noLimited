@@ -59,7 +59,8 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
     queryKey: ['keys'],
     queryFn: () => apiFetch('/api/keys'),
   })
-  const addedPlatforms = useMemo(() => new Set<string>(keys.map(k => k.platform)), [keys])
+  const safeKeys = Array.isArray(keys) ? keys : []
+  const addedPlatforms = useMemo(() => new Set<string>(safeKeys.map(k => k.platform)), [safeKeys])
   const [hideAdded, setHideAdded] = useState(false)
 
   // #657 post-add scope picker: the platform's model list. This is the same
@@ -69,10 +70,11 @@ export function AddKeyForm({ onSuccess, initialPlatform }: { onSuccess: (offer?:
   // is why the picker needs no new endpoint and no widening of POST /api/keys
   // (whose response only carries a model COUNT, not the ids). An empty or
   // still-loading list simply means no picker, which is the old behaviour.
-  const { data: catalog = [] } = useQuery<FallbackEntry[]>({
+  const { data: rawCatalog = [] } = useQuery<FallbackEntry[]>({
     queryKey: ['fallback'],
     queryFn: () => apiFetch('/api/fallback'),
   })
+  const catalog = Array.isArray(rawCatalog) ? rawCatalog : []
 
   // Whether the key that just landed is worth offering the picker for, and the
   // rows to offer. Anything missing — no id back, a keyless sentinel, a catalog
