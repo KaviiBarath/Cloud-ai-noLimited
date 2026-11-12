@@ -1,0 +1,430 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-chart-5: var(--chart-5);
+    --color-chart-4: var(--chart-4);
+    --color-chart-3: var(--chart-3);
+    --color-chart-2: var(--chart-2);
+    --color-chart-1: var(--chart-1);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    /* --radius is 0.5rem, so: sm 4px · md 6px · lg 8px (buttons/inputs)
+       · xl 12px · 2xl 16px (tables/lists) · 3xl 24px (cards) · 4xl 32px */
+    --radius-sm: calc(var(--radius) * 0.5);
+    --radius-md: calc(var(--radius) * 0.75);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.5);
+    --radius-2xl: calc(var(--radius) * 2);
+    --radius-3xl: calc(var(--radius) * 3);
+    --radius-4xl: calc(var(--radius) * 4);
+}
+
+:root {
+    --background: oklch(0.982 0.008 245);
+    --foreground: oklch(0.16 0.035 258);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.16 0.035 258);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.16 0.035 258);
+    --primary: oklch(0.38 0.16 255);
+    --primary-foreground: oklch(0.99 0.005 250);
+    --secondary: oklch(0.945 0.012 250);
+    --secondary-foreground: oklch(0.18 0.03 260);
+    --muted: oklch(0.945 0.012 250);
+    --muted-foreground: oklch(0.48 0.03 255);
+    --accent: oklch(0.935 0.018 255);
+    --accent-foreground: oklch(0.18 0.03 260);
+    --destructive: oklch(0.577 0.245 27.325);
+    --border: oklch(0.885 0.015 255);
+    --input: oklch(0.885 0.015 255);
+    --ring: oklch(0.50 0.16 255);
+    --chart-1: oklch(0.45 0.18 255);
+    --chart-2: oklch(0.52 0.17 160);
+    --chart-3: oklch(0.48 0.19 300);
+    --chart-4: oklch(0.58 0.16 65);
+    --chart-5: oklch(0.55 0.20 25);
+    --radius: 0.5rem;
+    --sidebar: oklch(0.975 0.008 250);
+    --sidebar-foreground: oklch(0.16 0.035 258);
+    --sidebar-primary: oklch(0.38 0.16 255);
+    --sidebar-primary-foreground: oklch(0.99 0.005 250);
+    --sidebar-accent: oklch(0.94 0.015 255);
+    --sidebar-accent-foreground: oklch(0.18 0.03 260);
+    --sidebar-border: oklch(0.885 0.015 255);
+    --sidebar-ring: oklch(0.50 0.16 255);
+}
+
+.dark {
+    --background: oklch(0.128 0.024 256);
+    --foreground: oklch(0.985 0.008 250);
+    --card: oklch(0.165 0.028 256);
+    --card-foreground: oklch(0.985 0.008 250);
+    --popover: oklch(0.185 0.032 256);
+    --popover-foreground: oklch(0.985 0.008 250);
+    --primary: oklch(0.72 0.19 240);
+    --primary-foreground: oklch(0.12 0.02 256);
+    --secondary: oklch(0.22 0.030 256);
+    --secondary-foreground: oklch(0.96 0.01 250);
+    --muted: oklch(0.20 0.026 256);
+    --muted-foreground: oklch(0.68 0.035 250);
+    --accent: oklch(0.235 0.038 256);
+    --accent-foreground: oklch(0.98 0.01 250);
+    --destructive: oklch(0.68 0.22 25);
+    --border: oklch(0.30 0.035 256 / 55%);
+    --input: oklch(0.30 0.035 256 / 75%);
+    --ring: oklch(0.72 0.19 240);
+    --chart-1: oklch(0.72 0.19 240);
+    --chart-2: oklch(0.74 0.18 160);
+    --chart-3: oklch(0.72 0.20 295);
+    --chart-4: oklch(0.78 0.17 65);
+    --chart-5: oklch(0.72 0.22 25);
+    --sidebar: oklch(0.145 0.026 256);
+    --sidebar-foreground: oklch(0.98 0.008 250);
+    --sidebar-primary: oklch(0.72 0.19 240);
+    --sidebar-primary-foreground: oklch(0.12 0.02 256);
+    --sidebar-accent: oklch(0.22 0.030 256);
+    --sidebar-accent-foreground: oklch(0.98 0.008 250);
+    --sidebar-border: oklch(0.28 0.032 256 / 50%);
+    --sidebar-ring: oklch(0.72 0.19 240);
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    html {
+        @apply font-sans antialiased;
+        font-feature-settings: 'ss01', 'cv11';
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: 'ss01', 'cv11', 'tnum';
+    }
+    /* Desktop shell: on macOS where the window has native sidebar vibrancy,
+       let the vibrancy show through a translucent backdrop so the
+       dashboard reads as real glass, like the tray popover. Cards and
+       popovers stay opaque on top. On Windows and Linux, keep the solid
+       background so contrast and legibility are preserved. */
+    html.desktop.desktop-mac body {
+        background-color: transparent;
+    }
+    html.desktop.desktop-mac .desktop-backdrop {
+        background-color: color-mix(in oklab, var(--background) 55%, transparent);
+    }
+    code, pre, kbd, samp {
+        font-family: var(--font-mono);
+        font-feature-settings: 'ss02', 'ss03';
+    }
+    /* Tabular numerals on any element that opts in */
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+    /* Tighter focus ring across inputs */
+    input, textarea, select {
+        font-feature-settings: 'ss01';
+    }
+}
+
+/* ── Syntax highlighting (highlight.js spans, see lib/highlight.ts) ─────────
+   One restrained palette per theme: keywords and tags carry the accent,
+   strings warm, comments recede, everything else stays the text colour. */
+.code-highlight { color: var(--foreground); }
+.code-highlight .hljs-comment, .code-highlight .hljs-quote { color: oklch(0.55 0 0); font-style: italic; }
+.code-highlight .hljs-keyword, .code-highlight .hljs-selector-tag, .code-highlight .hljs-built_in,
+.code-highlight .hljs-type, .code-highlight .hljs-literal, .code-highlight .hljs-doctag,
+.code-highlight .hljs-meta { color: oklch(0.45 0.18 290); }
+.code-highlight .hljs-tag, .code-highlight .hljs-name, .code-highlight .hljs-selector-class,
+.code-highlight .hljs-selector-id, .code-highlight .hljs-section, .code-highlight .hljs-title { color: oklch(0.48 0.16 250); }
+.code-highlight .hljs-attr, .code-highlight .hljs-attribute, .code-highlight .hljs-variable,
+.code-highlight .hljs-template-variable, .code-highlight .hljs-property, .code-highlight .hljs-params { color: oklch(0.5 0.12 45); }
+.code-highlight .hljs-string, .code-highlight .hljs-regexp, .code-highlight .hljs-addition,
+.code-highlight .hljs-template-tag, .code-highlight .hljs-symbol, .code-highlight .hljs-bullet { color: oklch(0.5 0.14 150); }
+.code-highlight .hljs-number, .code-highlight .hljs-link { color: oklch(0.5 0.15 25); }
+.code-highlight .hljs-deletion { color: oklch(0.5 0.18 25); }
+.code-highlight .hljs-emphasis { font-style: italic; }
+.code-highlight .hljs-strong { font-weight: 600; }
+.dark .code-highlight .hljs-comment, .dark .code-highlight .hljs-quote { color: oklch(0.6 0 0); }
+.dark .code-highlight .hljs-keyword, .dark .code-highlight .hljs-selector-tag, .dark .code-highlight .hljs-built_in,
+.dark .code-highlight .hljs-type, .dark .code-highlight .hljs-literal, .dark .code-highlight .hljs-doctag,
+.dark .code-highlight .hljs-meta { color: oklch(0.78 0.12 290); }
+.dark .code-highlight .hljs-tag, .dark .code-highlight .hljs-name, .dark .code-highlight .hljs-selector-class,
+.dark .code-highlight .hljs-selector-id, .dark .code-highlight .hljs-section, .dark .code-highlight .hljs-title { color: oklch(0.78 0.11 240); }
+.dark .code-highlight .hljs-attr, .dark .code-highlight .hljs-attribute, .dark .code-highlight .hljs-variable,
+.dark .code-highlight .hljs-template-variable, .dark .code-highlight .hljs-property, .dark .code-highlight .hljs-params { color: oklch(0.8 0.1 60); }
+.dark .code-highlight .hljs-string, .dark .code-highlight .hljs-regexp, .dark .code-highlight .hljs-addition,
+.dark .code-highlight .hljs-template-tag, .dark .code-highlight .hljs-symbol, .dark .code-highlight .hljs-bullet { color: oklch(0.78 0.12 150); }
+.dark .code-highlight .hljs-number, .dark .code-highlight .hljs-link { color: oklch(0.78 0.12 30); }
+.dark .code-highlight .hljs-deletion { color: oklch(0.7 0.16 25); }
+
+/* ── Modern 3D & Commercial Polish ────────────────────────────────────────── */
+
+/* GitHub-Style Atmospheric Grid & Floating Cosmic Clouds */
+.github-grid-bg {
+    background-image: url('./assets/grid.svg');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+}
+
+@keyframes githubCloudPulse {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: translate3d(25px, -15px, 0) scale(1.12);
+        opacity: 0.95;
+    }
+}
+
+@keyframes githubCloudDrift {
+    0%, 100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translate3d(-30px, 20px, 0) scale(1.08);
+        opacity: 0.85;
+    }
+}
+
+.cloud-orb-cyan {
+    animation: githubCloudPulse 14s ease-in-out infinite;
+}
+
+.cloud-orb-indigo {
+    animation: githubCloudDrift 18s ease-in-out infinite;
+}
+
+/* Atmospheric stage glow for immersive commercial depth */
+body {
+    background-image: 
+        radial-gradient(ellipse 90% 45% at 50% -10%, color-mix(in oklab, var(--primary) 7%, transparent) 0%, transparent 70%);
+    background-attachment: fixed;
+}
+
+.dark body {
+    background-image: 
+        radial-gradient(ellipse 90% 45% at 50% -10%, color-mix(in oklab, var(--primary) 14%, transparent) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 30% at 85% 15%, color-mix(in oklab, oklch(0.70 0.20 295) 8%, transparent) 0%, transparent 60%);
+    background-attachment: fixed;
+}
+
+/* Layered 3D Elevation for Cards & Containers */
+.bg-card,
+[data-slot="card"],
+section.bg-card,
+.rounded-3xl.border.bg-card {
+    position: relative;
+    box-shadow: 
+        0 1px 1px 0 rgba(15, 23, 42, 0.04),
+        0 8px 24px -4px rgba(15, 23, 42, 0.06),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease;
+}
+
+.dark .bg-card,
+.dark [data-slot="card"],
+.dark section.bg-card,
+.dark .rounded-3xl.border.bg-card {
+    background-color: color-mix(in oklab, var(--card) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.4),
+        0 12px 30px -8px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.3);
+    border-color: oklch(0.32 0.04 256 / 45%);
+}
+
+/* Card subtle 3D hover response */
+.bg-card:hover,
+[data-slot="card"]:hover,
+section.bg-card:hover {
+    border-color: color-mix(in oklab, var(--border) 75%, var(--primary));
+}
+
+.dark .bg-card:hover,
+.dark [data-slot="card"]:hover,
+.dark section.bg-card:hover {
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.5),
+        0 16px 36px -10px rgba(0, 0, 0, 0.7),
+        0 0 25px -4px color-mix(in oklab, var(--primary) 12%, transparent),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 0 rgba(0, 0, 0, 0.4);
+}
+
+/* 3D Segmented Control & Pill Bars */
+.rounded-xl.border.p-1 {
+    background-color: color-mix(in oklab, var(--muted) 40%, transparent);
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+    border-color: var(--border);
+}
+
+.dark .rounded-xl.border.p-1 {
+    background-color: color-mix(in oklab, var(--card) 60%, var(--background));
+    box-shadow: 
+        inset 0 2px 5px 0 rgba(0, 0, 0, 0.45),
+        0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    border-color: oklch(0.28 0.035 256 / 40%);
+}
+
+/* Active 3D Segment Button Pop */
+.rounded-xl.border.p-1 > button[aria-selected="true"],
+.rounded-xl.border.p-1 > a.bg-foreground,
+.rounded-xl.border.p-1 > button.bg-foreground {
+    position: relative;
+    box-shadow: 
+        0 2px 8px -1px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+    transform: translateY(-0.5px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .rounded-xl.border.p-1 > button[aria-selected="true"],
+.dark .rounded-xl.border.p-1 > a.bg-foreground,
+.dark .rounded-xl.border.p-1 > button.bg-foreground {
+    background: linear-gradient(180deg, oklch(0.97 0.01 250) 0%, oklch(0.88 0.02 245) 100%);
+    color: oklch(0.12 0.02 256);
+    box-shadow: 
+        0 3px 10px -1px rgba(0, 0, 0, 0.6),
+        0 0 12px 0 color-mix(in oklab, var(--primary) 25%, transparent),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+}
+
+/* 3D Tactile Buttons */
+[data-slot="button"] {
+    transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.18s ease,
+                border-color 0.18s ease;
+}
+
+[data-slot="button"]:not(:disabled):hover {
+    transform: translateY(-1px);
+}
+
+[data-slot="button"]:not(:disabled):active {
+    transform: translateY(1px);
+}
+
+.dark [data-slot="button"][data-variant="default"] {
+    background-image: linear-gradient(180deg, oklch(0.76 0.19 240) 0%, oklch(0.68 0.19 240) 100%);
+    box-shadow: 
+        0 2px 6px -1px rgba(0, 0, 0, 0.4),
+        0 0 12px -2px color-mix(in oklab, var(--primary) 40%, transparent),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+.dark [data-slot="button"][data-variant="outline"] {
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 3D Cylindrical Progress & Token Bar */
+.flex.h-2\.5.rounded-full.overflow-hidden.bg-muted {
+    box-shadow: 
+        inset 0 2px 4px 0 rgba(0, 0, 0, 0.35),
+        0 1px 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid oklch(0.30 0.035 256 / 40%);
+    position: relative;
+}
+
+.flex.h-2\.5.rounded-full.overflow-hidden.bg-muted > div {
+    position: relative;
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.25) 100%);
+    box-shadow: 0 0 10px 0 color-mix(in oklab, var(--primary) 40%, transparent);
+}
+
+/* 3D Table Container Depth */
+.rounded-2xl.border.overflow-x-auto {
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.05),
+        0 10px 25px -5px rgba(0, 0, 0, 0.08);
+}
+
+.dark .rounded-2xl.border.overflow-x-auto {
+    background-color: color-mix(in oklab, var(--card) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 
+        0 1px 2px 0 rgba(0, 0, 0, 0.4),
+        0 14px 32px -8px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+    border-color: oklch(0.32 0.04 256 / 45%);
+}
+
+/* Table Row Smooth Hover */
+.group\/row {
+    transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.dark .group\/row:hover > td {
+    background-color: color-mix(in oklab, var(--muted) 70%, var(--primary) 8%) !important;
+}
+
+/* Smooth Focus Glow on all inputs */
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 35%, transparent),
+                0 0 16px -2px color-mix(in oklab, var(--primary) 25%, transparent) !important;
+}
+
+/* Glowing Neon Status Dot */
+@keyframes pulseGlow {
+    0%, 100% {
+        box-shadow: 0 0 6px 1px color-mix(in oklab, var(--primary) 70%, transparent),
+                    0 0 14px 3px color-mix(in oklab, var(--primary) 40%, transparent);
+        opacity: 1;
+    }
+    50% {
+        box-shadow: 0 0 12px 3px color-mix(in oklab, var(--primary) 90%, transparent),
+                    0 0 22px 6px color-mix(in oklab, var(--primary) 55%, transparent);
+        opacity: 0.85;
+    }
+}
+
+.brand-dot-glow {
+    animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
