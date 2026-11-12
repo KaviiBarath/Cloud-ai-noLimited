@@ -36,12 +36,12 @@ export function ProviderChecklistSection({ onAddKey }: { onAddKey: (platform: st
 
   // No skeleton: the strip is one line of muted text, so it simply appears
   // once loaded instead of reserving space while the page settles.
-  if (!data || data.providers.length === 0) return null
+  if (!data || !Array.isArray(data.providers) || data.providers.length === 0) return null
 
   const unconfigured = data.providers.filter(p => !p.configured)
   const summaryText = t('keys.checklistSummary', {
-    configured: data.summary.configured,
-    total: data.summary.total,
+    configured: data.summary?.configured ?? 0,
+    total: data.summary?.total ?? data.providers.length,
   })
 
   // Everything configured: nothing actionable to expand, just the summary.

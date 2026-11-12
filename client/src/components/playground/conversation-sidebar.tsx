@@ -143,13 +143,13 @@ export function ConversationSidebar({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
-          {conversations.length === 0 ? (
+          {(!Array.isArray(conversations) || conversations.length === 0) ? (
             <p className="px-2 py-3 text-xs text-muted-foreground">
               {t('playgroundSessions.empty')}
             </p>
           ) : (
             <ul className="space-y-0.5">
-              {conversations.map(conversation => {
+              {(Array.isArray(conversations) ? conversations : []).map(conversation => {
                 const isActive = conversation.id === activeId
                 const armed = armedDeleteId === conversation.id
                 return (

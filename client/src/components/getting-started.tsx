@@ -47,7 +47,7 @@ export function GettingStarted() {
   // checklist at every established install for a moment on each visit.
   if (dismissed || !keys || !summary) return null
 
-  const hasKeys = keys.length > 0
+  const hasKeys = Array.isArray(keys) && keys.length > 0
   const hasRequest = (summary.totalRequests ?? 0) > 0
   if (hasKeys && hasRequest) return null
 

@@ -359,7 +359,7 @@ export default function PlaygroundPage() {
     queryFn: () => apiFetch('/api/search/engines'),
     retry: false,
   })
-  const usableEngines = engineChain(searchEngines).filter(e => e.keyCount > 0)
+  const usableEngines = engineChain(Array.isArray(searchEngines) ? searchEngines : []).filter(e => e.keyCount > 0)
   const webSearchAvailable = usableEngines.length > 0
   const webSearchOn = webSearch && webSearchAvailable
   const transcriptionAvailable = hasTranscription(mediaModels)
@@ -447,7 +447,7 @@ export default function PlaygroundPage() {
     queryKey: ['profiles'],
     queryFn: () => apiFetch('/api/profiles'),
   })
-  const chainOptions = chains
+  const chainOptions = (Array.isArray(chains) ? chains : [])
     .filter(c => c.type === 'custom')
     .map(c => ({
       value: `auto:${c.name.toLowerCase()}`,
@@ -461,7 +461,7 @@ export default function PlaygroundPage() {
   // always collapses a model's providers into one option.
   const unifyOn = true
 
-  const availableModels = fallbackEntries.filter(e => e.keyCount > 0 && e.enabled)
+  const availableModels = (Array.isArray(fallbackEntries) ? fallbackEntries : []).filter(e => e.keyCount > 0 && e.enabled)
   // Collapse the same model from multiple providers into one option (value =
   // canonical id, which the proxy resolves to the whole group).
   const modelOptions = buildModelOptions(availableModels, unifyOn)

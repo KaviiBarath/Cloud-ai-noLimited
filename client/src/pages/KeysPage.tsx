@@ -60,6 +60,7 @@ export default function KeysPage() {
     queryKey: ['keys'],
     queryFn: () => apiFetch('/api/keys'),
   })
+  const safeKeys = Array.isArray(keys) ? keys : []
 
   const { data: healthData } = useQuery<HealthData>({
     queryKey: ['health'],
@@ -82,12 +83,12 @@ export default function KeysPage() {
         description={t('keys.pageDescription')}
         actions={
           <>
-            {(tab === 'providers' || tab === 'quotaSignals') && keys.length > 0 && (
+            {(tab === 'providers' || tab === 'quotaSignals') && safeKeys.length > 0 && (
               <Button variant="outline" size="sm" onClick={() => checkAll.mutate()} disabled={checkAll.isPending}>
                 {checkAll.isPending ? t('keys.checking') : t('keys.checkAll')}
               </Button>
             )}
-            {keys.length > 0 && (
+            {safeKeys.length > 0 && (
               <Button variant="outline" size="sm" onClick={() => setExportOpen(true)}>
                 <Download className="size-3.5" />
                 {t('keys.export')}

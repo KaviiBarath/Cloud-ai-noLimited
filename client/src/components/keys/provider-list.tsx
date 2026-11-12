@@ -113,10 +113,11 @@ export function ProviderList({ onAddKey }: { onAddKey: () => void }) {
   // the retired Providers page; everything else that page did already lived here.
   const [testTarget, setTestTarget] = useState<{ platform: string; keyId?: number; label: string } | null>(null)
   const [addModelTarget, setAddModelTarget] = useState<{ platform: string; keyId?: number } | null>(null)
-  const { data: keys = [], isLoading } = useQuery<ApiKey[]>({
+  const { data: rawKeys = [], isLoading } = useQuery<ApiKey[]>({
     queryKey: ['keys'],
     queryFn: () => apiFetch('/api/keys'),
   })
+  const keys = Array.isArray(rawKeys) ? rawKeys : []
 
   const { data: healthData } = useQuery<HealthData>({
     queryKey: ['health'],
