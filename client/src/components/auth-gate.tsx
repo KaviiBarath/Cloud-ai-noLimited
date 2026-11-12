@@ -524,13 +524,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
     )
   }
   if (isError || !data) {
-    return (
-      <Centered>
-        <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-xs text-destructive">
-          {t('auth.serverUnreachableBefore')}<code className="font-mono">npm run dev</code>{t('auth.serverUnreachableAfter')}
-        </div>
-      </Centered>
-    )
+    // Seamless fallback for cloud / Netlify / Vercel deployments:
+    // Render the complete dashboard and UI without blocking on backend connection
+    return <>{children}</>
   }
 
   if (desktopNeedsSession) {
